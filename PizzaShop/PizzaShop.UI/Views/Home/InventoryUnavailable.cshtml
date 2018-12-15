@@ -1,0 +1,28 @@
+﻿@model PizzaShop.UI.Models.InventoryCheckFailure
+
+@{
+    ViewData["Title"] = "InventoryUnavailable";
+}
+
+<h1>Sorry, We can't make that Pizza because We are out of the following item(s)</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.UnavailableItems) {
+        <tr>
+            <td>
+                @item
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<div class="form-group">
+    <a asp-controller="Home" asp-action="PlaceOrder">Go Back to Order</a>
+</div>

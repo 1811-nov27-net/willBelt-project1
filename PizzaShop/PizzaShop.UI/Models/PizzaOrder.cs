@@ -17,6 +17,11 @@ namespace PizzaShop.UI.Models
         public List<string> toppingList { get; set; }
         public List<int> toppingKeys { get; set; }
 
+        public PizzaOrder()
+        {
+
+        }
+
         public void InitalizeMenus (Dictionary<int,string> sizes, Dictionary<int,string> crustTypes, Dictionary<int,string> toppings, Dictionary<int,int> inventory)
         {
             toppingMenu = new Dictionary<int, string>();
@@ -27,7 +32,6 @@ namespace PizzaShop.UI.Models
                     toppingMenu.Add(topping.Key, topping.Value);
                 }
             }
-            this.toppings = new bool[toppings.Count];
             toppingList = new List<string>();
             toppingKeys = new List<int>();
             foreach(var topping in toppingMenu)

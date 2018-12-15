@@ -47,6 +47,17 @@ namespace PizzaShop.DataAccess
             trackedUser.DefaultLocation = db.Locations.First(l => l.LocationDescription == user.DefaultLocation.LocationDescription).LocationId;
             db.Add(trackedUser);
         }
+
+        public bool AddNewUser(Users user)
+        {
+            if (db.Users.FirstOrDefault(u => u.FirstName == user.FirstName && u.LastName == user.LastName && u.Password == user.Password) == null)
+            {
+                db.Users.Add(user);
+                return true;
+            }
+            else
+                return false;
+        }
         /// <summary>
         /// Creates a new DataAccess Orders Object from an OrderClass object and adds it to the database
         /// </summary>
@@ -163,17 +174,17 @@ namespace PizzaShop.DataAccess
         /// <param name="firstName">First name of the user being searched for</param>
         /// <param name="lastName">Last name of the user being searched for</param>
         /// <returns>UserClass object Built from the Row in the database corresponding to the queried name</returns>
-        public UserClass GetUserByName(string firstName, string lastName)
+        public UserClass GetUserByName(string firstName, string lastName, string password)
         {
-            var user = BuildUserFromDBUser(db.Users.First(u => u.FirstName == firstName && u.LastName == lastName));
+            var user = BuildUserFromDBUser(db.Users.First(u => u.FirstName == firstName && u.LastName == lastName && u.Password == password));
             BuildLocationOrderHistory(user.DefaultLocation);
             return user;
         }
 
         public bool CheckLogin(string firstName, string lastName, string password)
         {
-            var user = db.Users.First(u => u.FirstName == firstName && u.LastName == lastName);
-            return password == user.Password;
+            var user = db.Users.FirstOrDefault(u => u.FirstName == firstName && u.LastName == lastName && u.Password == password);
+            return user != null;
         }
         /// <summary>
         /// Method to convers from DataAccess Locations object to LocationClass object
@@ -246,11 +257,12 @@ namespace PizzaShop.DataAccess
         /// <returns>UserClass object built from DataAccess Users object</returns>
         private UserClass BuildUserFromDBUser(Users user)
         {
+            LocationClass location = BuildLocationFromDBLocations(db.Locations.Find(user.DefaultLocation));
             return new UserClass(
                 user.UserId,
                 user.FirstName,
                 user.LastName,
-                BuildLocationFromDBLocations(db.Locations.Find(user.DefaultLocation))
+                location
                 );
 
         }

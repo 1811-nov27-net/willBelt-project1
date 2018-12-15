@@ -1,14 +1,20 @@
 ﻿@model PizzaShop.Library.OrderClass
 
 @{
-    ViewData["Title"] = "PlaceOrder";
+    ViewData["Title"] = "TimeCheckFailure";
 }
 
-<h1>PlaceOrder</h1>
-<hr />
+<h1>Sorry, You cannot place another order to this location until at least 2 hours after your previous order</h1>
+
 <div>
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">
+            Time:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.time)
+        </dd>
         <dt class="col-sm-2">
             Customer:
         </dt>
@@ -31,7 +37,7 @@
                     @Html.DisplayFor(model => pizza.PizzaString)
                     <br />
                 }
-               }
+            }
         </dd>
         <dt class="col-sm-2">
             Total:
@@ -39,15 +45,8 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.total)
         </dd>
-</dl>
+    </dl>
 </div>
-<div class="form-group">
-    <a asp-controller="Home" asp-action="MakePizza">"Add Pizza to Order"</a>
+<div>
+    <a asp-action="Location">Select Another Location</a>
 </div>
-<div class="form-group">
-    <a asp-controller="Home" asp-action="OrderPlaced">Finished</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

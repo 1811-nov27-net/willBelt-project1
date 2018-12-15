@@ -26,7 +26,7 @@
                 @foreach(string item in Model.toppingList)
                 {
                 <div class="form-group">
-                    <input asp-for="toppings[Model.toppingList.IndexOf(item)]" type="checkbox" />
+                    <input asp-for="toppings[Model.toppingKeys[Model.toppingList.IndexOf(item)]]" type="checkbox" />
                     <text>@item</text>
                 </div>
                 }

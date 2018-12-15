@@ -16,6 +16,7 @@ namespace PizzaShop.UI.Controllers
         public static UserClass LoggedInUser;
         public static OrderClass order, SuggestedOrder;
         public static bool SuggestedAnOrder;
+        public static PizzaClass pizza;
         public HomeController(IPizzaShopRepo Repo)
         {
             repo = Repo;
@@ -47,13 +48,47 @@ namespace PizzaShop.UI.Controllers
                     if(repo.CheckLogin(user.FirstName, user.LastName, user.Password))
                     {
                         order = new OrderClass();
-                        order.customer = repo.GetUserByName(user.FirstName, user.LastName);
+                        order.customer = repo.GetUserByName(user.FirstName, user.LastName, user.Password);
                         return RedirectToAction(nameof(DefaultLocation));
                     }
                     else
                     {
                         return View();
                     }
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError("Id", ex.Message);
+                return View();
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public IActionResult CreateNewAccount()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateNewAccount(Users user)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    repo.AddNewUser(user);
+                    order = new OrderClass();
+                    order.customer = repo.GetUserByName(user.FirstName, user.LastName, user.Password);
+                    return RedirectToAction(nameof(Location));   
                 }
                 else
                 {
@@ -114,6 +149,7 @@ namespace PizzaShop.UI.Controllers
         {
             SuggestedOrder = new OrderClass();
             SuggestedOrder = order.location.SuggestFromHistory(order.location.OrderHistory, order.customer);
+            repo.BuildLocationOrderHistory(SuggestedOrder.location);
             return View(SuggestedOrder);
         }
 
@@ -122,6 +158,10 @@ namespace PizzaShop.UI.Controllers
             if (order.location == null)
             {
                 order.location = order.customer.DefaultLocation;
+            }
+            if(order.location.OrderHistory.Any(o => o.customer.UserID == order.customer.UserID) && !order.location.TimeCheck(order.customer))
+            {
+                return RedirectToAction(nameof(TimeCheckFailure));
             }
             if (order.location.OrderHistory.Any(o => o.customer.UserID == order.customer.UserID) && SuggestedOrder == null)
             {
@@ -141,6 +181,70 @@ namespace PizzaShop.UI.Controllers
             PizzaOrder pizza = new PizzaOrder();
             pizza.InitalizeMenus(order.location.sizes, order.location.crustTypes, order.location.toppings, order.location.inventory);
             return View(pizza);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult MakePizza(PizzaOrder pizzaOrder)
+        {
+            pizza = new PizzaClass(
+                order.location.sizes,
+                order.location.crustTypes,
+                order.location.toppings,
+                pizzaOrder.size,
+                pizzaOrder.crust,
+                pizzaOrder.toppings);
+            if(order.pizzas.Count < 12 && order.total + pizza.price <= 500.00m && order.location.CheckInventory(pizza))
+            {
+                order.AddPizza(pizza);
+                order.location.DecrementInventory(pizza);
+                return RedirectToAction(nameof(PlaceOrder));
+            }
+            else if (order.pizzas.Count == 12)
+            {
+                return RedirectToAction(nameof(OrderIsFull));
+            }
+            else if (order.total + pizza.price > 500.00m)
+            {
+                return RedirectToAction(nameof(MaximumPrice));
+            }
+            else
+            {
+                return RedirectToAction(nameof(InventoryUnavailable));
+            }
+        }
+
+        public IActionResult OrderIsFull()
+        {
+            return View();
+        }
+
+        public IActionResult MaximumPrice()
+        {
+            return View();
+        }
+
+        public IActionResult InventoryUnavailable()
+        {
+            InventoryCheckFailure items = new InventoryCheckFailure();
+            items.BuildList(order.location.toppings, order.location.inventory, pizza);
+            return View(items);
+        }
+
+        public IActionResult TimeCheckFailure()
+        {
+            OrderClass previousOrder = order.location.OrderHistory
+                .FindAll(o => o.customer.UserID == order.customer.UserID)
+                .OrderByDescending(o => o.time).First();
+            return View(previousOrder);
+        }
+
+        public IActionResult OrderPlaced()
+        {
+            order.time = DateTime.Now;
+            repo.CreateOrder(order);
+            repo.SaveChanges();
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

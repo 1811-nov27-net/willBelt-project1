@@ -112,15 +112,15 @@ namespace PizzaShop.Library
                         GetCrustOrder();
                         GetToppigsOrder();
                         //check inventory to ensure order can be fulfilled
-                        if (CheckInventory())
-                        {
-                            //Decrement inventory values of selected ingredients
-                            DecrementInventory();
-                            //instantiate PizzaClass object , add it to newOrder.pizzas and print to console
-                            PizzaClass newPizza = new PizzaClass(sizes, crustTypes, toppings, size, crust, toppingChoices);
-                            Console.WriteLine(newOrder.AddPizza(newPizza));
-                            Console.WriteLine($"Total: ${newOrder.total}");
-                        }
+                        //if (CheckInventory())
+                        //{
+                        //    //Decrement inventory values of selected ingredients
+                        //    DecrementInventory();
+                        //    //instantiate PizzaClass object , add it to newOrder.pizzas and print to console
+                        //    PizzaClass newPizza = new PizzaClass(sizes, crustTypes, toppings, size, crust, toppingChoices);
+                        //    Console.WriteLine(newOrder.AddPizza(newPizza));
+                        //    Console.WriteLine($"Total: ${newOrder.total}");
+                        //}
                         //ask user if they want to order any additional pizzas
                         Console.WriteLine("Would you like to order anything else? y/n");
                         input = Console.ReadLine();
@@ -248,15 +248,14 @@ namespace PizzaShop.Library
         /// <summary>
         /// Check inventory to ensure we have all the ingredients necessary to make the ordered pizza
         /// </summary>
-        private bool CheckInventory()
+        public bool CheckInventory(PizzaClass pizza)
         {
             //iterate thrugh toppingChoices and check inventory values for all used ingredients
-            for (int i = 0; i < toppingChoices.Length; i++)
+            for (int i = 0; i < pizza.toppingSelection.Length; i++)
             {
-                if (inventory[i] == 0)
+                if (pizza.toppingSelection[i] && inventory[i] == 0)
                 {
                     //inform user that the order cannot be fulfilled and return false
-                    Console.WriteLine($"We cannot fulfill that order because we are out of {toppings[i]}");
                     return false;
                 }
             }
@@ -266,11 +265,11 @@ namespace PizzaShop.Library
         /// <summary>
         /// Decrements values in inventory corresponing to the selected ingredients
         /// </summary>
-        private void DecrementInventory()
+        public void DecrementInventory(PizzaClass pizza)
         {
-            for (int i = 0; i < toppingChoices.Length; i++)
+            for (int i = 0; i < pizza.toppingSelection.Length; i++)
             {
-                if (toppingChoices[i] && inventory[i] > 0)
+                if (pizza.toppingSelection[i] && inventory[i] > 0)
                 {
                     inventory[i]--;
                 }
