@@ -13,7 +13,9 @@ namespace PizzaShop.UI.Controllers
     public class HomeController : Controller
     {
         public IPizzaShopRepo repo;
-        public UserClass LoggedInUser;
+        public static UserClass LoggedInUser;
+        public static OrderClass order, SuggestedOrder;
+        public static bool SuggestedAnOrder;
         public HomeController(IPizzaShopRepo Repo)
         {
             repo = Repo;
@@ -44,8 +46,9 @@ namespace PizzaShop.UI.Controllers
                 {
                     if(repo.CheckLogin(user.FirstName, user.LastName, user.Password))
                     {
-                        LoggedInUser = repo.GetUserByName(user.FirstName, user.LastName);
-                        RedirectToAction(nameof(Location));
+                        order = new OrderClass();
+                        order.customer = repo.GetUserByName(user.FirstName, user.LastName);
+                        return RedirectToAction(nameof(DefaultLocation));
                     }
                     else
                     {
@@ -56,7 +59,6 @@ namespace PizzaShop.UI.Controllers
                 {
                     return View();
                 }
-                return RedirectToAction(nameof(Index));
             }
             catch (ArgumentException ex)
             {
@@ -69,9 +71,76 @@ namespace PizzaShop.UI.Controllers
             }
         }
 
-        public IActionResult Location(UserClass user)
+        public IActionResult DefaultLocation()
         {
-            return View();
+            return View(order.customer.DefaultLocation);
+        }
+
+        public IActionResult Location()
+        {
+            LocationsList list = new LocationsList();
+            list.InitializeList(repo.GetAllLocations());
+            return View(list);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Location(LocationsList locationList)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    order.location = repo.GetLocationByDescription(locationList.locationDescription);
+                    return RedirectToAction(nameof(PlaceOrder));
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError("Id", ex.Message);
+                return View(repo.GetAllLocations());
+            }
+            catch
+            {
+                return View(repo.GetAllLocations());
+            }
+        }
+
+        public IActionResult SuggestOrder()
+        {
+            SuggestedOrder = new OrderClass();
+            SuggestedOrder = order.location.SuggestFromHistory(order.location.OrderHistory, order.customer);
+            return View(SuggestedOrder);
+        }
+
+        public IActionResult PlaceOrder()
+        {
+            if (order.location == null)
+            {
+                order.location = order.customer.DefaultLocation;
+            }
+            if (order.location.OrderHistory.Any(o => o.customer.UserID == order.customer.UserID) && SuggestedOrder == null)
+            {
+                return RedirectToAction(nameof(SuggestOrder));
+            }
+            return View(order);
+        }
+
+        public IActionResult AcceptedSuggestedOrder()
+        {
+            order = SuggestedOrder;
+            return RedirectToAction(nameof(PlaceOrder));
+        }
+
+        public IActionResult MakePizza()
+        {
+            PizzaOrder pizza = new PizzaOrder();
+            pizza.InitalizeMenus(order.location.sizes, order.location.crustTypes, order.location.toppings, order.location.inventory);
+            return View(pizza);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

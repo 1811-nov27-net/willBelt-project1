@@ -1,0 +1,50 @@
+﻿@model PizzaShop.Library.OrderClass
+
+@{
+    ViewData["Title"] = "PlaceOrder";
+}
+
+<h1>PlaceOrder</h1>
+<hr />
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Customer:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.customer.FirstName) @Html.DisplayFor(model => model.customer.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            Location:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.location.LocationDescription)
+        </dd>
+        <dt class="col-sm-2">
+            Order:
+        </dt>
+        @foreach (var pizza in Model.pizzas)
+        {
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => pizza.PizzaString)
+            </dd>
+        }
+        <dt class="col-sm-2">
+            Total:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.total)
+        </dd>
+    </dl>
+</div>
+<div class="form-group">
+    <a asp-controller="Home" asp-action="MakePizza">"Add Pizza to Order"</a>
+</div>
+<div class="form-group">
+    <a asp-controller="Home" asp-action="OrderPlaced">Finished</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

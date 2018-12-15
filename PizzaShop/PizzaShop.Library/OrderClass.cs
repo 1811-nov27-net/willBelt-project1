@@ -6,11 +6,19 @@ namespace PizzaShop.Library
     public class OrderClass
     {
         public UserClass customer { get; set; }
-        public List<PizzaClass> pizzas = new List<PizzaClass>();
+        public List<PizzaClass> pizzas { get; set; }
         public DateTime time { get; set; }
         public LocationClass location { get; set; }
         public decimal total { get; set; }
         public int OrderID { get; set; }
+        public string OrderString { get; set; }
+
+        public OrderClass()
+        {
+            pizzas = new List<PizzaClass>();
+            OrderString = "";
+            total = 0.0m;
+        }
         /// <summary>
         /// Constructor
         /// </summary>
@@ -23,6 +31,8 @@ namespace PizzaShop.Library
             customer = user;
             this.location = location;
             total = 0.0m;
+            OrderString = "";
+            pizzas = new List<PizzaClass>();
         }
         /// <summary>
         /// Check cost and pizza count constraints, and add a PizzaClass object to the pizzas list
@@ -40,6 +50,7 @@ namespace PizzaShop.Library
                     //add pizza to pizzas list, add price of pizza to order total, and return string indicating success
                     this.pizzas.Add(newPizza);
                     total += newPizza.price;
+                    OrderString = ToString();
                     return newPizza.ToString() + "\nhas been added to your order.";
                 }
                 else
@@ -62,14 +73,14 @@ namespace PizzaShop.Library
         public override string ToString()
         {
             //declare orderString and instantiateit with users name and location desription
-            var orderString = $"Customer: {customer.FirstName} {customer.LastName}\nLocation: {location.LocationDescription}\n";
+            var orderString = $"Customer: {customer.FirstName} {customer.LastName}\nLocation: {location.LocationDescription}\n\n";
             //iterate through pizzas list and call each pizzas ToString method and add that string to the order string
             foreach (var pizza in pizzas)
             {
-                orderString += $"{pizza.ToString()}\n";
+                orderString += $"{pizza.ToString()}\n\n";
             }
             //add total price and time to orderString
-            orderString += $"Total: ${total}\n";
+            orderString += $"Total: ${total}\n\n";
             orderString += time.ToString();
             //return completed orderString
             return orderString;

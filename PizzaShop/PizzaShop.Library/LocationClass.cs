@@ -7,7 +7,7 @@ namespace PizzaShop.Library
     public class LocationClass
     {
         public Dictionary<int,int> inventory = new Dictionary<int,int> {
-            { 0,50 },
+            {0, 50 },
             {1, 50 },
             {2, 50 },
             {3, 50 },
@@ -36,8 +36,12 @@ namespace PizzaShop.Library
         private string input;
         private bool[] toppingChoices;
         private int size, crust;
-        public string LocationDescription;
+        public string LocationDescription { get; set; }
         public int LocationID { get; set; }
+        public LocationClass()
+        {
+
+        }
         /// <summary>
         /// Constructor that uses default menu and inventory settings
         /// </summary>
@@ -88,10 +92,10 @@ namespace PizzaShop.Library
             OrderClass newOrder = new OrderClass(0, user, this);
             //retrieve and check users order history from locations order history and check time constraint
             IList<OrderClass> customerHistory = OrderHistory.FindAll(o => o.customer.UserID == user.UserID);
-            if (customerHistory.Count == 0 || TimeCheck(customerHistory.OrderByDescending(o => o.time).First().time))
+            if (customerHistory.Count == 0 /*|| TimeCheck(customerHistory.OrderByDescending(o => o.time).First().time)*/)
             {
                 //make suggestion to user based on order history
-                if (customerHistory.Count > 0 && SuggestFromHistory(customerHistory, newOrder))
+                if (customerHistory.Count > 0 /*&& SuggestFromHistory(customerHistory, newOrder)*/)
                 {
 
                 }
@@ -375,8 +379,9 @@ namespace PizzaShop.Library
         /// </summary>
         /// <param name="time">time value from users most recent order</param>
         /// <returns>true if time is more than 2 hours ago, false if not</returns>
-        public bool TimeCheck(DateTime time)
+        public bool TimeCheck(UserClass user)
         {
+            var time = OrderHistory.FindAll(o => o.customer.UserID == user.UserID).OrderByDescending(o => o.time).First().time;
             if (DateTime.Now.Subtract(time).TotalHours > 2)
                 return true;
             else
@@ -388,20 +393,12 @@ namespace PizzaShop.Library
         /// <param name="orders">users order history</param>
         /// <param name="newOrder">order currently being placed</param>
         /// <returns>true if user accepts suggestion, false if they choose to order something else</returns>
-        private bool SuggestFromHistory(IList<OrderClass> orders, OrderClass newOrder)
+        public OrderClass SuggestFromHistory(IList<OrderClass> orders, UserClass user)
         {
+            IList<OrderClass> customerHistory = OrderHistory.FindAll(o => o.customer.UserID == user.UserID);
             //Group orders by what was ordered, then select the most frequent
-            var order = orders.GroupBy(o => o.ToString()).First().First();
-            //suggest order to user
-            Console.WriteLine($"Would you like to reorder your previous order?(y/n)\n{order.ToString()}");
-            string input = Console.ReadLine();
-            if (input.ToLower() == "y" || input.ToLower() == "yes")
-            {
-                newOrder = order;
-                return true;
-            }
-            else
-                return false;
+            return customerHistory.GroupBy(o => o.ToString()).First().First();
+            
         }
         /// <summary>
         /// reset inventory values back to full

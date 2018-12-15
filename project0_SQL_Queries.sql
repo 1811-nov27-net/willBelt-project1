@@ -21,6 +21,9 @@ CREATE TABLE project0.Users
 	DefaultLocation INT NOT NULL	
 );
 
+ALTER TABLE project0.Users
+	ADD Password NVARCHAR(100) NOT NULL DEFAULT 'password';
+
 ALTER TABLE project0.Orders
 	ADD CONSTRAINT Fk_Orders_UserID FOREIGN KEY (UserID) REFERENCES project0.Users(UserID);
 
@@ -85,3 +88,4 @@ SELECT * FROM project0.Orders
 SELECT * FROM project0.Users;
 
 SELECT * FROM project0.Locations;
+

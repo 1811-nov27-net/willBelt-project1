@@ -1,0 +1,35 @@
+﻿@model PizzaShop.Library.LocationClass
+
+@{
+    ViewData["Title"] = "DefaultLocation";
+}
+
+<h1>DefaultLocation</h1>
+
+<div>
+    <h4>LocationClass</h4>
+    <hr />
+    <dl class="row">
+        @*<dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LocationID)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LocationID)
+        </dd>*@
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LocationDescription)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LocationDescription)
+        </dd>
+    </dl>
+</div>
+<div class="form-group">
+    <a asp-controller="Home" asp-action="PlaceOrder">Use Default Location</a>
+</div>
+<div class="form-group">
+    <a asp-controller="Home" asp-action="Location">Choose Location</a>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+</div>

@@ -10,6 +10,8 @@ namespace PizzaShop.DataAccess
     /// </summary>
     public interface IPizzaShopRepo
     {
+        UserClass User { get; set; }
+        IList<LocationClass> LocationsList { get; set; }
         IList<LocationClass> GetAllLocations();
         IList<UserClass> GetAllUsers();
         IList<OrderClass> GetAllOrders();

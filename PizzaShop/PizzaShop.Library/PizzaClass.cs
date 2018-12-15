@@ -9,8 +9,9 @@ namespace PizzaShop.Library
         Dictionary<int, string> toppings;
         public int size { get; set; }
         public int crustSelection { get; set; }
-        public bool[] toppingSelection = new bool[7];
+        public bool[] toppingSelection;
         public decimal price { get; set; }
+        public string PizzaString{ get; set; }
         /// <summary>
         /// Pizza constructor
         /// </summary>
@@ -26,6 +27,7 @@ namespace PizzaShop.Library
             this.sizes = sizes;
             this.crustTypes = crustTypes;
             this.toppings = toppings;
+            this.toppingSelection = new bool[toppings.Count];
             //ensure topping selections are valid
             bool toppingsAreValid = true;
             for(int i = 0; i < toppingChoices.Length; i++)
@@ -39,6 +41,7 @@ namespace PizzaShop.Library
                 crustSelection = crust;
                 toppingSelection = toppingChoices;
                 price = this.CalculatePrice();
+                PizzaString = ToString();
             }
         }
         /// <summary>

@@ -12,6 +12,8 @@ namespace PizzaShop.DataAccess
     /// </summary>
     public class PizzaShopRepo : IPizzaShopRepo
     {
+        public UserClass User { get; set; }
+        public IList<LocationClass> LocationsList { get; set; }
         public ProjectsContext db { get; }
         /// <summary>
         /// Constructor that takes a Database context argument
@@ -163,7 +165,9 @@ namespace PizzaShop.DataAccess
         /// <returns>UserClass object Built from the Row in the database corresponding to the queried name</returns>
         public UserClass GetUserByName(string firstName, string lastName)
         {
-            return BuildUserFromDBUser(db.Users.First(u => u.FirstName == firstName && u.LastName == lastName));
+            var user = BuildUserFromDBUser(db.Users.First(u => u.FirstName == firstName && u.LastName == lastName));
+            BuildLocationOrderHistory(user.DefaultLocation);
+            return user;
         }
 
         public bool CheckLogin(string firstName, string lastName, string password)

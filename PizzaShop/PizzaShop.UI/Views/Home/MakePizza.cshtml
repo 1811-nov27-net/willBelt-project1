@@ -1,0 +1,47 @@
+﻿@model PizzaShop.UI.Models.PizzaOrder
+
+@{
+    ViewData["Title"] = "MakePizza";
+}
+
+<h1>MakePizza</h1>
+
+<h4>PizzaOrder</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="MakePizza">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="size" class="control-label"></label>
+                <select asp-for="size" asp-items="Model.sizeList" class="form-control"></select>
+                <span asp-validation-for="size" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="crust" class="control-label"></label>
+                <select asp-for="crust" asp-items="Model.crustList" class="form-control"></select>
+                <span asp-validation-for="crust" class="text-danger"></span>
+            </div>
+            <div>
+                @foreach(string item in Model.toppingList)
+                {
+                <div class="form-group">
+                    <input asp-for="toppings[Model.toppingList.IndexOf(item)]" type="checkbox" />
+                    <text>@item</text>
+                </div>
+                }
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add Pizza" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
