@@ -30,5 +30,7 @@ namespace PizzaShop.DataAccess
         bool CheckLogin(string firstName, string lastName, string password);
         bool IsAdmin(UserClass user);
         OrderClass GetOrderById(int id);
+        IList<UserClass> SearchUsersByName(string firstName, string lastName);
+        UserClass GetUserById(int id);
     }
 }

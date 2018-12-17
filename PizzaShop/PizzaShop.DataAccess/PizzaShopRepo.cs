@@ -318,5 +318,36 @@ namespace PizzaShop.DataAccess
             BuildLocationOrderHistory(order.location);
             return order;
         }
+
+        public IList<UserClass> SearchUsersByName(string firstName, string lastName)
+        {
+            IList<UserClass> list = new List<UserClass>();
+            if(firstName != null && lastName != null && firstName != "" && lastName != "")
+            {
+                foreach(var user in db.Users.Where( u => u.FirstName == firstName && u.LastName == lastName))
+                {
+                    list.Add(BuildUserFromDBUser(user));
+                }
+            }
+            else if(firstName != null && firstName != "")
+            {
+                foreach (var user in db.Users.Where(u => u.FirstName == firstName))
+                {
+                    list.Add(BuildUserFromDBUser(user));
+                }
+            }
+            else if (lastName != null && lastName != "")
+            {
+                foreach (var user in db.Users.Where(u => u.LastName == lastName))
+                {
+                    list.Add(BuildUserFromDBUser(user));
+                }
+            }
+            return list;
+        }
+        public UserClass GetUserById(int id)
+        {
+            return BuildUserFromDBUser(db.Users.Find(id));
+        }
     }
 }
