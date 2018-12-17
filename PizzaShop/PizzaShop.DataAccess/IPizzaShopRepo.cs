@@ -28,5 +28,7 @@ namespace PizzaShop.DataAccess
         LocationClass GetLocationByDescription(string description);
         void UpdateUser(UserClass user);
         bool CheckLogin(string firstName, string lastName, string password);
+        bool IsAdmin(UserClass user);
+        OrderClass GetOrderById(int id);
     }
 }

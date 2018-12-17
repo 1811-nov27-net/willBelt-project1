@@ -11,6 +11,7 @@ namespace PizzaShop.Library
         public LocationClass DefaultLocation;
         public LocationClass location;
         public int UserID { get; set; }
+        public string Password { get; set; }
         /// <summary>
         /// Constructor
         /// </summary>

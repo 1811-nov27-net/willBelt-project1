@@ -424,11 +424,11 @@ namespace PizzaShop.Library
         /// <summary>
         /// Adds a specified new topping to the menu of this location
         /// </summary>
-        public void AddToppingToMenu()
+        public void AddToppingToMenu(string input)
         {
             //ask user for new topping
-            Console.WriteLine("Enter the name of the new Topping:");
-            string input = Console.ReadLine();
+            //Console.WriteLine("Enter the name of the new Topping:");
+            //string input = Console.ReadLine();
             //check if new topping has been on the menu previously and if so, restore it
             if (toppings.ContainsValue(input))
             {
@@ -449,19 +449,19 @@ namespace PizzaShop.Library
         /// <summary>
         /// Remove a topping from the menu of this location
         /// </summary>
-        public void RemoveToppingFromMenu()
+        public void RemoveToppingFromMenu(int index)
         {
             //ask the user what topping to remove
-            Console.WriteLine("What Topping would you like to remove?");
-            foreach (var topping in toppings)
-            {
-                Console.WriteLine($"{topping.Key + 1}. {topping.Value}");
-            }
-            string input = Console.ReadLine();
+            //Console.WriteLine("What Topping would you like to remove?");
+            //foreach (var topping in toppings)
+            //{
+            //    Console.WriteLine($"{topping.Key + 1}. {topping.Value}");
+            //}
+            //string input = Console.ReadLine();
             //parse user input and set inventory value for selected topping to -1 to mark it as removed
-            if (int.TryParse(input, out int number) && inventory.ContainsKey(number - 1))
+            if (inventory.ContainsKey(index))
             {
-                inventory[number - 1] = -1;
+                inventory[index] = -1;
             }
         }
         /// <summary>

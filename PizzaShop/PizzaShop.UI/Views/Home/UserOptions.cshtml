@@ -1,0 +1,36 @@
+﻿@model PizzaShop.Library.UserClass
+
+@{
+    ViewData["Title"] = "UserOptions";
+}
+
+<h1>UserOptions</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DefaultLocation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DefaultLocation.LocationDescription)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="DefaultLocation" class="btn btn-primary">Place an Order</a>
+    <a asp-action="ChooseDefaultLocation" class="btn btn-primary">Change Your Default Location</a>
+    <a asp-action="ChangePassword" class="btn btn-primary">Change Your Password</a>
+</div>

@@ -1,0 +1,45 @@
+﻿@model IEnumerable<PizzaShop.Library.OrderClass>
+
+@{
+    ViewData["Title"] = "ViewOrderHistory";
+}
+
+<h1>View Order History</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.time)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.total)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderID)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.time)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.total)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderID)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "OrderDetails", new {  id = item.OrderID  }) 
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<div>
+    <a asp-action="AdminOptions" class="btn btn-primary">Back to Options</a>
+</div>

@@ -258,12 +258,14 @@ namespace PizzaShop.DataAccess
         private UserClass BuildUserFromDBUser(Users user)
         {
             LocationClass location = BuildLocationFromDBLocations(db.Locations.Find(user.DefaultLocation));
-            return new UserClass(
+            UserClass User = new UserClass(
                 user.UserId,
                 user.FirstName,
                 user.LastName,
                 location
                 );
+            User.Password = user.Password;
+            return User;
 
         }
         /// <summary>
@@ -295,8 +297,26 @@ namespace PizzaShop.DataAccess
         public void UpdateUser(UserClass user)
         {
             var trackedUser = db.Users.Find(user.UserID);
+            trackedUser.FirstName = user.FirstName;
+            trackedUser.LastName = user.LastName;
             trackedUser.DefaultLocation = user.DefaultLocation.LocationID;
+            trackedUser.Password = user.Password;
             db.Users.Update(trackedUser);
+        }
+
+        public bool IsAdmin(UserClass user)
+        {
+            if (db.Users.First(u => u.UserId == user.UserID).Admin)
+                return true;
+            else
+                return false;
+        }
+
+        public OrderClass GetOrderById(int id)
+        {
+            OrderClass order = BuildOrderFromDBOrder(db.Orders.Find(id));
+            BuildLocationOrderHistory(order.location);
+            return order;
         }
     }
 }

@@ -1,0 +1,29 @@
+﻿@model PizzaShop.UI.Models.Topping
+
+@{
+    ViewData["Title"] = "AddTopping";
+}
+
+<h1>Add Topping</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddTopping">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="NewTopping" class="control-label">New Topping</label>
+                <input asp-for="NewTopping" class="form-control" required/>
+                <span asp-validation-for="NewTopping" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="AdminLocationPicker">Back to Options</a>
+</div>
+

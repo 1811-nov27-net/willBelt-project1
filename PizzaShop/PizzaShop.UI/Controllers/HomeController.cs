@@ -13,7 +13,6 @@ namespace PizzaShop.UI.Controllers
     public class HomeController : Controller
     {
         public IPizzaShopRepo repo;
-        public static UserClass LoggedInUser;
         public static OrderClass order, SuggestedOrder;
         public static bool SuggestedAnOrder;
         public static PizzaClass pizza;
@@ -49,7 +48,7 @@ namespace PizzaShop.UI.Controllers
                     {
                         order = new OrderClass();
                         order.customer = repo.GetUserByName(user.FirstName, user.LastName, user.Password);
-                        return RedirectToAction(nameof(DefaultLocation));
+                        return RedirectToAction(nameof(Options));
                     }
                     else
                     {
@@ -70,6 +69,118 @@ namespace PizzaShop.UI.Controllers
             {
                 return View();
             }
+        }
+
+        public IActionResult Options()
+        {
+            if (repo.IsAdmin(order.customer))
+                return RedirectToAction(nameof(AdminOptions));
+            else
+                return RedirectToAction(nameof(UserOptions));
+        }
+
+        public IActionResult UserOptions()
+        {
+            return View(order.customer);
+        }
+
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangePassword(PasswordChange password)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (repo.CheckLogin(order.customer.FirstName, order.customer.LastName, password.CurrentPassword))
+                    {
+                        order.customer.Password = password.NewPassword;
+                        repo.UpdateUser(order.customer);
+                        repo.SaveChanges();
+                        order.customer = repo.GetUserByName(order.customer.FirstName, order.customer.LastName, order.customer.Password);
+                        return RedirectToAction(nameof(Options));
+                    }
+                    else
+                        return View();
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError("Id", ex.Message);
+                return View();
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public IActionResult AdminOptions()
+        {
+            return View(order.customer);
+        }
+
+        public IActionResult NewLocation()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult NewLocation(LocationClass location)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    repo.AddNewLocation(location);
+                    repo.SaveChanges();
+                    return RedirectToAction(nameof(AdminOptions));
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError("Id", ex.Message);
+                return View();
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public IActionResult ViewInventory()
+        {
+            Inventory inventory = new Inventory();
+            inventory.BuildInventory(order.location);
+            return View(inventory);
+        }
+
+        public IActionResult RestockedInventory()
+        {
+            for (int i = 0; i < order.location.inventory.Count; i++)
+            {
+                if (order.location.inventory[i] != -1)
+                {
+                    order.location.inventory[i] = 50;
+                }
+            }
+            repo.UpdateLocation(order.location);
+            repo.SaveChanges();
+            return View();
         }
 
         public IActionResult CreateNewAccount()
@@ -106,6 +217,144 @@ namespace PizzaShop.UI.Controllers
             }
         }
 
+        public IActionResult AdminLocationPicker()
+        {
+            LocationsList locationList = new LocationsList();
+            locationList.InitializeList(repo.GetAllLocations());
+            return View(locationList);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AdminLocationPicker(LocationsList locationList)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    order.location = repo.GetLocationByDescription(locationList.locationDescription);
+                    return RedirectToAction(nameof(AdminActions));
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError("Id", ex.Message);
+                return View(repo.GetAllLocations());
+            }
+            catch
+            {
+                return View(repo.GetAllLocations());
+            }
+        }
+
+        public IActionResult AdminActions()
+        {
+            return View();
+        }
+
+        public IActionResult ViewOrderHistory()
+        {
+            return View(order.location.OrderHistory);
+        }
+
+        public IActionResult OrderDetails(int id)
+        {
+            OrderClass Order = repo.GetOrderById(id);
+            return View(Order);
+        }
+
+        public IActionResult AddTopping()
+        {
+            Topping topping = new Topping();
+            topping.BuildMenus(order.location);
+            return View(topping);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddTopping(Topping topping)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    order.location.AddToppingToMenu(topping.NewTopping);
+                    repo.UpdateLocation(order.location);
+                    repo.SaveChanges();
+                    return RedirectToAction(nameof(ToppingAdded));
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError("Id", ex.Message);
+                return View();
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public IActionResult RemoveTopping()
+        {
+            Topping topping = new Topping();
+            topping.BuildMenus(order.location);
+            return View(topping);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveTopping(Topping topping)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    for(int i = 0; i < topping.toppings.Length; i++)
+                    {
+                        if (topping.toppings[i])
+                        {
+                            order.location.RemoveToppingFromMenu(i);
+                        }
+                    }
+                    repo.UpdateLocation(order.location);
+                    repo.SaveChanges();
+                    return RedirectToAction(nameof(ToppingsRemoved));
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError("Id", ex.Message);
+                return View();
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public IActionResult ToppingAdded()
+        {
+            return View();
+        }
+
+        public IActionResult ToppingsRemoved()
+        {
+            return View();
+        }
+
         public IActionResult ChooseDefaultLocation()
         {
             LocationsList list = new LocationsList();
@@ -115,15 +364,16 @@ namespace PizzaShop.UI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateNewAccount(LocationsList list)
+        public ActionResult ChooseDefaultLocation(LocationsList Locationlist)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    order.customer.DefaultLocation = repo.GetLocationByDescription(list.locationDescription);
+                    order.customer.DefaultLocation = repo.GetLocationByDescription(Locationlist.locationDescription);
                     repo.UpdateUser(order.customer);
-                    return RedirectToAction(nameof(DefaultLocation));
+                    repo.SaveChanges();
+                    return RedirectToAction(nameof(Options));
                 }
                 else
                 {

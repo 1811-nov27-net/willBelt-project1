@@ -89,3 +89,7 @@ SELECT * FROM project0.Users;
 
 SELECT * FROM project0.Locations;
 
+ALTER TABLE project0.Users
+	ADD Admin BIT NOT NULL DEFAULT 0;
+
+UPDATE project0.Users SET Admin = 1 WHERE FirstName = 'Cave' AND LastName = 'Johnson'

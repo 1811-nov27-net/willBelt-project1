@@ -1,0 +1,49 @@
+﻿@model PizzaShop.Library.OrderClass
+
+@{
+    ViewData["Title"] = "OrderDetails";
+}
+
+<h1>Order Details</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Customer Name: 
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.customer.FirstName) @Html.DisplayFor(model => model.customer.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.time)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.time)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.total)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.total)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderID)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OrderID)
+        </dd>
+        <dd class="col-sm-10">
+            @{ foreach (var pizza in Model.pizzas)
+                {
+
+                    @Html.DisplayFor(model => pizza.PizzaString)
+                    <br />
+                }
+            }
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="ViewOrderHistory" class="btn btn-primary">Back to Order History</a>
+</div>

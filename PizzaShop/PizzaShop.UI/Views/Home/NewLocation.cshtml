@@ -1,0 +1,29 @@
+﻿@model PizzaShop.Library.LocationClass
+
+@{
+    ViewData["Title"] = "NewLocation";
+}
+
+<h1>NewLocation</h1>
+
+<h4>LocationClass</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="NewLocation">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="LocationDescription" class="control-label">Location Description</label>
+                <input asp-for="LocationDescription" class="form-control" required />
+                <span asp-validation-for="LocationDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="AdminOptions" class="btn btn-primary">Back to Options</a>
+</div>
+
