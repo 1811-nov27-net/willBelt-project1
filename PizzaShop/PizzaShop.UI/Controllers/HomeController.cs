@@ -88,7 +88,42 @@ namespace PizzaShop.UI.Controllers
                     repo.AddNewUser(user);
                     order = new OrderClass();
                     order.customer = repo.GetUserByName(user.FirstName, user.LastName, user.Password);
-                    return RedirectToAction(nameof(Location));   
+                    return RedirectToAction(nameof(ChooseDefaultLocation));   
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError("Id", ex.Message);
+                return View();
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public IActionResult ChooseDefaultLocation()
+        {
+            LocationsList list = new LocationsList();
+            list.InitializeList(repo.GetAllLocations());
+            return View(list);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateNewAccount(LocationsList list)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    order.customer.DefaultLocation = repo.GetLocationByDescription(list.locationDescription);
+                    repo.UpdateUser(order.customer);
+                    return RedirectToAction(nameof(DefaultLocation));
                 }
                 else
                 {

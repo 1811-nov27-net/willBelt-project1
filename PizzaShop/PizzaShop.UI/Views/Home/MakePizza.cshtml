@@ -4,10 +4,9 @@
     ViewData["Title"] = "MakePizza";
 }
 
-<h1>MakePizza</h1>
+<h1>What Kind of Pizza Would You Like?</h1>
 
-<h4>PizzaOrder</h4>
-<hr />
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="MakePizza">
@@ -39,7 +38,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="PlaceOrder" class="btn btn-primary">Back to Order</a>
 </div>
 
 @section Scripts {
