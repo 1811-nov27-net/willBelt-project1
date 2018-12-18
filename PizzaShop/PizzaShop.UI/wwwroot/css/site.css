@@ -1,6 +1,16 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
+header{
+    background-color: blue;
+}
+body{
+    background-color: blue;
+}
 
+.container {
+    background-color: cornflowerblue;
+    color: black;
+}
 a.navbar-brand {
   white-space: normal;
   text-align: center;
@@ -11,6 +21,7 @@ a.navbar-brand {
 -------------------------------------------------- */
 html {
   font-size: 14px;
+  background-color: blue;
 }
 @media (min-width: 768px) {
   html {
@@ -18,11 +29,15 @@ html {
   }
 }
 
+main{
+    background-color:cornflowerblue;
+}
+
 .border-top {
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid blue;
 }
 .border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid blue;
 }
 
 .box-shadow {
@@ -53,4 +68,7 @@ body {
   /* Set the fixed height of the footer here */
   height: 60px;
   line-height: 60px; /* Vertically center the text there */
+}
+a{
+    color:aquamarine;
 }
