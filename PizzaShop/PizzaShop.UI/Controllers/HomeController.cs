@@ -199,7 +199,9 @@ namespace PizzaShop.UI.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    user.DefaultLocation = 1;
                     repo.AddNewUser(user);
+                    repo.SaveChanges();
                     order = new OrderClass();
                     order.customer = repo.GetUserByName(user.FirstName, user.LastName, user.Password);
                     return RedirectToAction(nameof(ChooseDefaultLocation));   
