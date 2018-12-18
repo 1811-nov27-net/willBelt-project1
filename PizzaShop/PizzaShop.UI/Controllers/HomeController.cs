@@ -641,7 +641,6 @@ namespace PizzaShop.UI.Controllers
 
         public IActionResult SortUserHistory()
         {
-            history = order.location.OrderHistory;
             return View();
         }
 

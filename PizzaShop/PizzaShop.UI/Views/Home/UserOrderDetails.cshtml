@@ -16,6 +16,12 @@
             @Html.DisplayFor(model => model.customer.FirstName) @Html.DisplayFor(model => model.customer.LastName)
         </dd>
         <dt class="col-sm-2">
+            Location:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.location.LocationDescription)
+        </dd>
+        <dt class="col-sm-2">
             Time
         </dt>
         <dd class="col-sm-10">
@@ -33,23 +39,17 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.OrderID)
         </dd>
-        <dt class="col-sm-2">
-            Location
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.location.LocationDescription)
-        </dd>
         <dd class="col-sm-10">
             @{ foreach (var pizza in Model.pizzas)
                 {
 
-                @Html.DisplayFor(model => pizza.PizzaString)
-                <br />
+                    @Html.DisplayFor(model => pizza.PizzaString)
+                    <br />
                 }
             }
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="UserDetails" class="btn btn-primary">Back to Order History</a>
+    <a asp-action="UserHistory" class="btn btn-primary">Back to Order History</a>
 </div>

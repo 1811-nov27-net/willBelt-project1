@@ -143,7 +143,7 @@ namespace PizzaShop.DataAccess
         /// <returns></returns>
         public IList<OrderClass> GetOrdersByUser(UserClass user)
         {
-            Users DBUser = db.Users.First(u => u.FirstName == user.FirstName && u.LastName == user.LastName);
+            Users DBUser = db.Users.First(u => u.FirstName == user.FirstName && u.LastName == user.LastName && u.Password == user.Password);
             IList<OrderClass> orderList = new List<OrderClass>();
             foreach (var order in db.Orders.Where(o => o.UserId == DBUser.UserId).ToList())
             {
