@@ -105,7 +105,6 @@ namespace PizzaShop.DataAccess
             foreach (var location in db.Locations.ToList())
             {
                 var temporary = BuildLocationFromDBLocations(location);
-                BuildLocationOrderHistory(temporary);
                 locationList.Add(temporary);
             }
             return locationList;
@@ -177,7 +176,7 @@ namespace PizzaShop.DataAccess
         public UserClass GetUserByName(string firstName, string lastName, string password)
         {
             var user = BuildUserFromDBUser(db.Users.First(u => u.FirstName == firstName && u.LastName == lastName && u.Password == password));
-            BuildLocationOrderHistory(user.DefaultLocation);
+            //BuildLocationOrderHistory(user.DefaultLocation);
             return user;
         }
 
@@ -287,7 +286,7 @@ namespace PizzaShop.DataAccess
         public LocationClass GetLocationByDescription(string description)
         {
             LocationClass location = BuildLocationFromDBLocations(db.Locations.First(l => l.LocationDescription == description));
-            BuildLocationOrderHistory(location);
+            //BuildLocationOrderHistory(location);
             return location;
         }
         /// <summary>
@@ -315,7 +314,7 @@ namespace PizzaShop.DataAccess
         public OrderClass GetOrderById(int id)
         {
             OrderClass order = BuildOrderFromDBOrder(db.Orders.Find(id));
-            BuildLocationOrderHistory(order.location);
+            //BuildLocationOrderHistory(order.location);
             return order;
         }
 

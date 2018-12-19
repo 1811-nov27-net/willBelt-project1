@@ -4,14 +4,18 @@ namespace PizzaShop.Library
 {
     public class PizzaClass
     {
-        Dictionary<int, string> sizes;
-        Dictionary<int, string> crustTypes;
-        Dictionary<int, string> toppings;
+        public Dictionary<int, string> sizes { get; set; }
+        public Dictionary<int, string> crustTypes { get; set; }
+        public Dictionary<int, string> toppings { get; set; }
         public int size { get; set; }
         public int crustSelection { get; set; }
         public bool[] toppingSelection;
         public decimal price { get; set; }
         public string PizzaString{ get; set; }
+        public PizzaClass()
+        {
+
+        }
         /// <summary>
         /// Pizza constructor
         /// </summary>
@@ -21,12 +25,12 @@ namespace PizzaShop.Library
         /// <param name="chosenSize">selected size</param>
         /// <param name="crust">selected crust type</param>
         /// <param name="toppingChoices">desired toppings</param>
-        public PizzaClass(Dictionary<int, string> sizes, Dictionary<int, string> crustTypes, Dictionary<int, string> toppings, int chosenSize, int crust, bool[] toppingChoices)
+        public PizzaClass(Dictionary<int, string> Sizes, Dictionary<int, string> CrustTypes, Dictionary<int, string> Toppings, int chosenSize, int crust, bool[] toppingChoices)
         {
             //import menu from location
-            this.sizes = sizes;
-            this.crustTypes = crustTypes;
-            this.toppings = toppings;
+            this.sizes = Sizes;
+            this.crustTypes = CrustTypes;
+            this.toppings = Toppings;
             this.toppingSelection = new bool[toppings.Count];
             //ensure topping selections are valid
             bool toppingsAreValid = true;
