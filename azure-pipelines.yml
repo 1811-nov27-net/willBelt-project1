@@ -14,14 +14,14 @@ variables:
 
 steps:
 - script: |
-  cd PizzaShop
-  dotnet build --configuration $(buildConfiguration)
-- displayName: 'dotnet build $(buildConfiguration)'
+    cd PizzaShop
+    dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
 - script: |
-  cd PizzaShop
-  dotnet test --configuration $(buildConfiguration)
-- displayName: 'dotnet test $(buildConfiguration)'
+    cd PizzaShop
+    dotnet test --configuration $(buildConfiguration)
+  displayName: 'dotnet test $(buildConfiguration)'
 - script: |
-  cd PizzaShop
-  dotnet publish PizzaShop.UI --configuration $(buildConfiguration) -o ./publish
-- displayName: 'dotnet publish $(buildConfiguration)'
+    cd PizzaShop
+    dotnet publish PizzaShop.UI --configuration $(buildConfiguration) -o ./publish
+  displayName: 'dotnet publish $(buildConfiguration)'
