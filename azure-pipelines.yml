@@ -23,5 +23,5 @@ steps:
   displayName: 'dotnet test $(buildConfiguration)'
 - script: |
     cd PizzaShop
-    dotnet publish PizzaShop.UI --configuration $(buildConfiguration) -o ./publish
+    dotnet publish PizzaShop.UI --configuration $(buildConfiguration) -o ../publish
   displayName: 'dotnet publish $(buildConfiguration)'
